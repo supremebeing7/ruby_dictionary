@@ -4,7 +4,8 @@ class Term
 
   def initialize(word, definition)
     @word = word
-    @definition = definition
+    @definition = []
+    @definition << definition
 
   end
 
@@ -20,10 +21,13 @@ class Term
     @word = edited_word
   end
 
-  def edit_definition(edited_definition)
-    @definition = edited_definition
+  def edit_definition(edited_definition, index)
+    @definition[index] = edited_definition
   end
 
+  def multi_definitions(new_definition)
+    @definition << new_definition
+  end
   def Term.create(word, definition)
     new_term = Term.new(word, definition)
     @@all_terms << new_term
@@ -38,7 +42,7 @@ class Term
     @@all_terms = []
   end
 
-  def Term.find(input)
+  def Term.find_index(input)
     Term.all.each_with_index do |term, index|
       found_word = term.word
       if found_word == input
@@ -47,5 +51,7 @@ class Term
     end
   end
 
-
+  def Term.search(input)
+    Term.all[Term.find_index(input)]
+  end
 end
