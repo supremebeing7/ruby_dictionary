@@ -68,20 +68,19 @@ end
 def edit_term
   puts "Type a word to edit the word or definition"
   term_index = Term.find_index(gets.chomp.capitalize)
-  puts "A - Add a definition to a word"
+  puts "AD - Add a definition to a word"
+  puts "AW - Add an additional word"
   puts "W - To edit Word"
   puts "D - To edit Definition"
   puts "DEL - To delete the word from Dictionary"
   option = gets.chomp.upcase
   case option
-  when "A"
+  when "AD"
     add_definition(term_index)
+  when "AW"
+    add_word(term_index)
   when "W"
-    puts "Type the word edit"
-    edited_word = gets.chomp
-    Term.all[term_index].edit_word(edited_word)
-    puts "Updated! #{Term.all[term_index].word} - #{Term.all[term_index].definition}\n"
-    main_menu
+    edit_word(term_index)
   when "D"
     edit_definition(term_index)
   when "DEL"
@@ -114,24 +113,46 @@ def search_terms
   main_menu
 end
 
+def add_word(term_index)
+  puts "Enter word to add an additional word"
+  Term.all[term_index].multi_words(gets.chomp.capitalize)
+  puts "Added #{Term.all[term_index].word.last} to #{Term.all[term_index].word}"
+  main_menu
+end
+
 def add_definition(term_index)
   puts "Enter definition to add to word"
-  Term.all[term_index].multi_definitions(gets.chomp)
+  Term.all[term_index].multi_definitions(gets.chomp.capitalize)
   puts "Added #{Term.all[term_index].definition.last} to #{Term.all[term_index].word}"
+  main_menu
+end
+
+def edit_word(term_index)
+  word_index = 0
+  word_count = Term.all[term_index].word.length
+  if word_count > 1
+    puts "choose a word to edit 1 to #{word_count}"
+    word_index = gets.chomp.to_i-1
+  end
+  puts "Type the word edit"
+  edited_word = gets.chomp.capitalize
+  Term.all[term_index].edit_word(edited_word, word_index)
+  puts "Updated! #{Term.all[term_index].word} - #{Term.all[term_index].definition}\n"
   main_menu
 end
 
 def edit_definition(term_index)
   def_index = 0
-    def_count = Term.all[term_index].definition.length
-    if def_count > 1
-      puts "choose a definition to edit 1 to #{def_count}"
-      def_index = gets.chomp.to_i-1
-    end
-    puts "Type the definition edit"
-    edited_definition = gets.chomp
-    Term.all[term_index].edit_definition(edited_definition, def_index)
-    puts "Updated! #{Term.all[term_index].word} - #{Term.all[term_index].definition}\n"
-    main_menu
+  def_count = Term.all[term_index].definition.length
+  if def_count > 1
+    puts "choose a definition to edit 1 to #{def_count}"
+    def_index = gets.chomp.to_i-1
+  end
+  puts "Type the definition edit"
+  edited_definition = gets.chomp.capitalize
+  Term.all[term_index].edit_definition(edited_definition, def_index)
+  puts "Updated! #{Term.all[term_index].word} - #{Term.all[term_index].definition}\n"
+  main_menu
 end
+
 main_menu
